@@ -233,6 +233,27 @@
         navigation: auto;
       }
 
+      /* Under Construction Banner */
+      .progress-banner {
+        background: linear-gradient(135deg, #f59e0b, #f97316);
+        border-bottom: 2px solid rgba(251, 191, 36, 0.5);
+        animation: slideInFromTop 0.8s ease-out;
+      }
+
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(245, 158, 11, 0.6);
+        }
+      }
+
+      .progress-banner.glow {
+        animation: pulse-glow 2s ease-in-out infinite;
+      }
+
       /* Adjust hero section for navbar */
       #home {
         padding-top: 80px;
@@ -376,6 +397,53 @@
               Get Started
             </a>
           </div>
+        </div>
+      </div>
+
+      <!-- Under Construction Banner -->
+      <div
+        id="progress-banner"
+        class="hidden progress-banner fixed top-16 left-0 right-0 z-40 py-3 px-6"
+      >
+        <div class="max-w-7xl mx-auto relative">
+          <div class="flex items-center justify-center gap-3 text-white">
+            <svg
+              class="w-5 h-5 animate-spin"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              ></path>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              ></path>
+            </svg>
+            <span
+              id="progress-message"
+              class="font-semibold text-sm md:text-base"
+            >
+              🚧 Under Construction - This app is currently in development and
+              not ready for production use.
+            </span>
+          </div>
+          <!-- Close Button -->
+          <button
+            id="close-banner-btn"
+            class="absolute right-0 top-1/2 -translate-y-1/2 text-white hover:text-gray-200 transition-colors p-1 rounded-full hover:bg-white/10"
+            aria-label="Close banner"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
         </div>
       </div>
 
@@ -762,6 +830,16 @@
         });
       });
 
+      // Close Banner functionality
+      const closeBannerBtn = document.getElementById("close-banner-btn");
+      const progressBannerElement = document.getElementById("progress-banner");
+      
+      if (closeBannerBtn && progressBannerElement) {
+        closeBannerBtn.addEventListener("click", () => {
+          progressBannerElement.classList.add("hidden");
+        });
+      }
+
       // Your SDK code
       const defaultConfig = {
         tagline: "Empowering Businesses to Sell Smarter",
@@ -769,11 +847,28 @@
           "SellProTech is a cutting-edge mobile app solution...",
         services_title: "Selling App",
         contact_title: "Get In Touch",
+        show_progress_banner: true,
+        progress_message:
+          "🚧 Under Construction - This app is currently in development and not ready for production use.",
       };
 
       async function onConfigChange(config) {
-        // Update elements based on config
+        // Update progress banner
+        const progressBanner = document.getElementById("progress-banner");
+        const progressMessage = document.getElementById("progress-message");
+
+        if (config.show_progress_banner === true) {
+          if (progressBanner) progressBanner.classList.remove("hidden");
+          if (progressMessage && config.progress_message) {
+            progressMessage.textContent = config.progress_message;
+          }
+        } else {
+          if (progressBanner) progressBanner.classList.add("hidden");
+        }
       }
+
+      // Initialize banner on page load
+      onConfigChange(defaultConfig);
 
       if (window.elementSdk) {
         window.elementSdk.init({ defaultConfig, onConfigChange });
