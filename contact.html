@@ -751,7 +751,10 @@
           } catch (error) {
             // Show error message
             errorMessage.classList.remove("hidden");
-            errorMessage.scrollIntoView({ behavior: "smooth", block: "center" });
+            errorMessage.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
           } finally {
             // Re-enable button and reset state
             submitBtn.disabled = false;
